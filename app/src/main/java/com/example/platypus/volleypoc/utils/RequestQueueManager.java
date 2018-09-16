@@ -6,6 +6,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.BasicNetwork;
 import com.android.volley.toolbox.DiskBasedCache;
+import com.android.volley.toolbox.HurlStack;
 import com.android.volley.toolbox.Volley;
 
 import java.io.File;
@@ -24,13 +25,13 @@ public class RequestQueueManager implements RequestQueue.RequestFinishedListener
     private int nbRequests = 0;                     // Number of requests currently in the queue (for debug display)
 
 
-    private RequestQueueManager(Context context, int nbThreads) {
-        mRequestQueue = getRequestQueue(context, nbThreads);
+    private RequestQueueManager(Context context, int nbThreads, boolean useOkHttp) {
+        mRequestQueue = getRequestQueue(context, nbThreads, useOkHttp);
     }
 
-    public static synchronized RequestQueueManager getInstance(Context context, int nbThreads) {
+    public static synchronized RequestQueueManager getInstance(Context context, int nbThreads, boolean useOkHttp) {
         if (mInstance == null) {
-            mInstance = new RequestQueueManager(context, nbThreads);
+            mInstance = new RequestQueueManager(context, nbThreads, useOkHttp);
         }
         return mInstance;
     }
@@ -49,11 +50,16 @@ public class RequestQueueManager implements RequestQueue.RequestFinishedListener
         return mRequestQueue;
     }
 
-    private RequestQueue getRequestQueue(Context ctx, int nbDlThreads) { // Freely inspired by inner workings of Volley.java and RequestQueue.java; to be watched closely as Volley evolves
+    private RequestQueue getRequestQueue(Context context, int nbDlThreads, boolean useOkHttp) { // Freely inspired by inner workings of Volley.java and RequestQueue.java; to be watched closely as Volley evolves
         if (mRequestQueue == null) {
-            BasicNetwork network = new BasicNetwork(new VolleyOkHttp3Stack(TIMEOUT_MS));
+            BasicNetwork network;
+            if (useOkHttp) {
+                network = new BasicNetwork(new VolleyOkHttp3Stack(TIMEOUT_MS));
+            } else {
+                network = new BasicNetwork(new HurlStack());
+            }
 
-            File cacheDir = new File(ctx.getCacheDir(), "volley"); // NB : this is dirty, as this value is supposed to be private in Volley.java
+            File cacheDir = new File(context.getCacheDir(), "volley"); // NB : this is dirty, as this value is supposed to be private in Volley.java
             mRequestQueue = new RequestQueue(new DiskBasedCache(cacheDir), network, nbDlThreads);
             mRequestQueue.addRequestFinishedListener(this);
             mRequestQueue.start();

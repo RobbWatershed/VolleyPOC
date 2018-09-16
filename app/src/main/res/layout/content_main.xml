@@ -8,6 +8,40 @@
     tools:context=".MainActivity"
     tools:showIn="@layout/activity_main">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Number of threads" />
+
+        <EditText
+            android:id="@+id/editTextThreads"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="number"
+            android:text="1"
+            tools:ignore="LabelFor" />
+
+        <CheckBox
+            android:id="@+id/checkBoxUserAgent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Hentoid user-agent ?" />
+
+        <CheckBox
+            android:id="@+id/checkBoxOkHttp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="OkHttp ?" />
+
+    </LinearLayout>
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

@@ -8,7 +8,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.CheckBox;
+import android.widget.EditText;
 
+import com.example.platypus.volleypoc.utils.InputStreamVolleyRequest;
 import com.example.platypus.volleypoc.utils.RequestQueueManager;
 
 import java.util.ArrayList;
@@ -35,7 +38,10 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                runVolley();
+                int threads = Integer.parseInt(((EditText)findViewById(R.id.editTextThreads)).getText().toString());
+                boolean useHentoidUserAgent = ((CheckBox)findViewById(R.id.checkBoxUserAgent)).isChecked();
+                boolean useOkHttp = ((CheckBox)findViewById(R.id.checkBoxOkHttp)).isChecked();
+                runVolley(threads, useHentoidUserAgent, useOkHttp);
             }
         });
     }
@@ -62,9 +68,14 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void runVolley()
+    private void runVolley(int threads, boolean useHentoidUserAgent, boolean useOkHttp)
     {
-        RequestQueueManager manager = RequestQueueManager.getInstance(this.getApplicationContext(), 1);
+        if (useHentoidUserAgent) InputStreamVolleyRequest.USER_AGENT = "Mozilla/5.0 (Linux; Android 4.0.4; Galaxy Nexus Build/IMM76K)"
+                + " AppleWebKit/535.19 (KHTML, like Gecko)"
+                + " Chrome/18.0.1025.166 Mobile Safari/535.19"
+                + " Hentoid/v" + BuildConfig.VERSION_NAME;
+
+        RequestQueueManager manager = RequestQueueManager.getInstance(this.getApplicationContext(), threads, useOkHttp);
 
         for (String s : urls) manager.addToQueue(s);
     }

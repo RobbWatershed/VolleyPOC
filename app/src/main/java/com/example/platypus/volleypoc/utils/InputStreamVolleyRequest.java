@@ -6,6 +6,7 @@ import com.android.volley.Response;
 import com.android.volley.toolbox.HttpHeaderParser;
 
 import java.util.AbstractMap;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -17,7 +18,10 @@ import java.util.Map;
  * <p>
  * to the download callback routine
  */
-class InputStreamVolleyRequest extends Request<byte[]> {
+public class InputStreamVolleyRequest extends Request<byte[]> {
+
+    public static String USER_AGENT = "";
+
     // Callback listener
     private final Response.Listener<Map.Entry<byte[], Map<String, String>>> mParseListener;
 
@@ -49,13 +53,12 @@ class InputStreamVolleyRequest extends Request<byte[]> {
         return Response.success(response.data, HttpHeaderParser.parseCacheHeaders(response));
     }
 
-    /*
     @Override
     public Map<String, String> getHeaders() {
         Map<String, String>  params = new HashMap<>();
-        params.put("User-Agent", Consts.USER_AGENT);
+
+        if (USER_AGENT.length() > 0) params.put("User-Agent", USER_AGENT);
 
         return params;
     }
-    */
 }
