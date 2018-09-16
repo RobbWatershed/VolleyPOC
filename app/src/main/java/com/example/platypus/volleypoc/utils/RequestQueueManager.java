@@ -30,10 +30,7 @@ public class RequestQueueManager implements RequestQueue.RequestFinishedListener
     }
 
     public static synchronized RequestQueueManager getInstance(Context context, int nbThreads, boolean useOkHttp) {
-        if (mInstance == null) {
-            mInstance = new RequestQueueManager(context, nbThreads, useOkHttp);
-        }
-        return mInstance;
+        return new RequestQueueManager(context, nbThreads, useOkHttp); // Yeah, that's no singleton at all, but this is a POC app, right ?
     }
 
     /**
