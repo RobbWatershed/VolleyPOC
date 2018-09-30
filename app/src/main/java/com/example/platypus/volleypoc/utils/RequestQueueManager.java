@@ -65,15 +65,15 @@ public class RequestQueueManager implements RequestQueue.RequestFinishedListener
     }
 
     public <T> void addToQueue(String url) {
-                    addToRequestQueue(new InputStreamVolleyRequest(Request.Method.GET, url,
-                        parse -> {
-                            if (parse != null) Timber.i("Request success : %s", url);
-                        },
-                        error -> {
-                            String statusCode = (error.networkResponse != null) ? error.networkResponse.statusCode + "" : "N/A";
-                            Timber.w("Download error - Image %s not retrieved (HTTP status code %s)", url, statusCode);
-                            error.printStackTrace();
-                        }));
+        addToRequestQueue(new InputStreamVolleyRequest(Request.Method.GET, url,
+                parse -> {
+                    if (parse != null) Timber.i("Request success : %s", url);
+                },
+                error -> {
+                    String statusCode = (error.networkResponse != null) ? error.networkResponse.statusCode + "" : "N/A";
+                    Timber.w("Download error - Image %s not retrieved (HTTP status code %s)", url, statusCode);
+                    error.printStackTrace();
+                }));
     }
 
     /**
