@@ -21,6 +21,10 @@ public class RequestQueueManager implements RequestQueue.RequestFinishedListener
     private static RequestQueueManager mInstance;   // Instance of the singleton
     private static final int TIMEOUT_MS = 15000;
 
+    // Ugly stuff; don't do this at home
+    public static int nbErrors;
+    public static int totalPics;
+
     private RequestQueue mRequestQueue;             // Volley download request queue
     private int nbRequests = 0;                     // Number of requests currently in the queue (for debug display)
 
@@ -71,8 +75,8 @@ public class RequestQueueManager implements RequestQueue.RequestFinishedListener
                 },
                 error -> {
                     String statusCode = (error.networkResponse != null) ? error.networkResponse.statusCode + "" : "N/A";
-                    Timber.w("Download error - Image %s not retrieved (HTTP status code %s)", url, statusCode);
-                    error.printStackTrace();
+                    Timber.w(error,"Download error - Image %s not retrieved (HTTP status code %s)", url, statusCode);
+                    nbErrors++;
                 }));
     }
 
@@ -96,5 +100,10 @@ public class RequestQueueManager implements RequestQueue.RequestFinishedListener
     public void onRequestFinished(Request request) {
         nbRequests--;
         Timber.d("RequestQueue ::: request removed - current total %s", nbRequests);
+
+        if (0 == nbRequests)
+        {
+            Timber.i("DOWNLOAD COMPLETE -- %s errors / %s requests", nbErrors, totalPics);
+        }
     }
 }

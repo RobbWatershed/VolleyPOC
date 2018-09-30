@@ -111,6 +111,8 @@ public class MainActivity extends AppCompatActivity {
 
         RequestQueueManager manager = RequestQueueManager.getInstance(this.getApplicationContext(), threads, useOkHttp);
 
+        RequestQueueManager.totalPics = urls.size();
+
         for (String s : urls) manager.addToQueue(s);
     }
 

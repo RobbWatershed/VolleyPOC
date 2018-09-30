@@ -1,6 +1,7 @@
 package com.example.platypus.volleypoc.utils;
 
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -27,13 +28,15 @@ public class ScreenTree extends Timber.Tree {
     @Override
     protected void log(int priority, String tag, @NonNull String message, Throwable t) {
 
-        activity.runOnUiThread(() -> {
-            TextView text = new TextView(activity.getApplicationContext());
-            text.setText(message);
+        if (priority > Log.DEBUG) {
+            activity.runOnUiThread(() -> {
+                TextView text = new TextView(activity.getApplicationContext());
+                text.setText(message);
 
-            layout.addView(text);
+                layout.addView(text);
 
-            scroll.pageScroll(View.FOCUS_DOWN);
-        });
+                scroll.pageScroll(View.FOCUS_DOWN);
+            });
+        }
     }
 }
