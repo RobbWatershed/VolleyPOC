@@ -16,6 +16,7 @@ import android.widget.ScrollView;
 import com.example.platypus.volleypoc.utils.InputStreamVolleyRequest;
 import com.example.platypus.volleypoc.utils.RequestQueueManager;
 import com.example.platypus.volleypoc.utils.ScreenTree;
+import com.google.android.gms.security.ProviderInstaller;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +29,13 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        try {
+            ProviderInstaller.installIfNeeded(getApplicationContext());
+        } catch (Exception e)
+        {
+            Timber.e(e, "ProviderInstaller exception");
+        }
+
         Timber.plant(new Timber.DebugTree());
 
         super.onCreate(savedInstanceState);
